@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Select, DatePicker, Input } from "antd";
+import type { DatePickerProps } from "antd";
 
 export const ExpenseForm = styled.div`
   height: 480px;
@@ -49,7 +50,7 @@ export const StyledInput = styled(Input)`
   margin-top: 8px;
 `;
 
-export const StyledSelect = styled(Select)`
+export const StyledSelect = styled(Select<string>)`
   width: 100%;
   height: 40px;
   border-radius: 8px;
@@ -57,7 +58,7 @@ export const StyledSelect = styled(Select)`
   margin-top: 8px !important;
 `;
 
-export const StyledDatePicker = styled(DatePicker)`
+export const StyledDatePicker = styled(DatePicker)<DatePickerProps>`
   width: 100%;
   height: 40px;
   border-radius: 8px;
