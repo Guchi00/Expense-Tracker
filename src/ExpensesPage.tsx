@@ -37,14 +37,7 @@ export const ExpensesPage = () => {
   const getExpenses = async () => {
     try {
       const response = await fetch(
-        `https://68e8e709f2707e6128ccb333.mockapi.io/expenses`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(expenseData),
-        }
+        `https://68e8e709f2707e6128ccb333.mockapi.io/expenses`
       );
       if (!response.ok) {
         throw new Error("An error occured");
@@ -69,7 +62,7 @@ export const ExpensesPage = () => {
         }
       );
       if (!response.ok) {
-        throw new Error("Unable to get comment");
+        throw new Error("An error occured");
       }
       const update = expenseData.filter((expense) => expense.id !== id);
       setExpenseData(update);
@@ -79,6 +72,59 @@ export const ExpensesPage = () => {
     }
   };
 
+  const handleUpdate = async (updatedExpense: Expense) => {
+    try {
+      const response = await fetch(
+        `https://68e8e709f2707e6128ccb333.mockapi.io/expenses/${updatedExpense.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ...updatedExpense }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("An error occured");
+      }
+      const data = await response.json();
+      const update = expenseData.map((expense) =>
+        expense.id === updatedExpense.id ? data : expense
+      );
+      setExpenseData(update);
+      alert("expense updated successfully");
+    } catch (error) {
+      console.log(`${error}`);
+    }
+  };
+
+  const handleEditClick = (record: Expense) => {
+    const newTitle = window.prompt("Enter new title:", record.title);
+    const newAmount = window.prompt(
+      "Enter new amount:",
+      record.amount.toString()
+    );
+    const newCategory = window.prompt("Enter new category:", record.category);
+    const newDate = window.prompt("Enter new date:", record.date);
+
+    if (
+      newTitle === null ||
+      newAmount === null ||
+      newCategory === null ||
+      newDate === null
+    )
+      return;
+
+    const updatedExpense: Expense = {
+      ...record,
+      title: newTitle,
+      amount: Number(newAmount),
+      category: newCategory,
+      date: newDate,
+    };
+
+    handleUpdate(updatedExpense);
+  };
   return (
     <>
       <S.Parent>
@@ -94,6 +140,8 @@ export const ExpensesPage = () => {
             <ExpenseList
               expenseData={expenseData}
               handleDelete={handleDelete}
+              handleUpdate={handleUpdate}
+              handleEditClick={handleEditClick}
             />
           </S.ListContainer>
         </S.Container>

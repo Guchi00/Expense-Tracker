@@ -1,14 +1,17 @@
 import { Table, Space } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { Expense } from "../expenseForm/ExpenseForm";
 import * as S from "./ExpenseList.styles";
 
 interface ExpenseDataProps {
   expenseData: Expense[];
   handleDelete: (id: string) => void;
+  handleUpdate: (expense: Expense) => void;
+  handleEditClick: (expense: Expense) => void;
 }
 
 export const ExpenseList = (props: ExpenseDataProps) => {
-  const { expenseData, handleDelete } = props;
+  const { expenseData, handleDelete, handleUpdate, handleEditClick } = props;
 
   const columns = [
     {
@@ -36,8 +39,12 @@ export const ExpenseList = (props: ExpenseDataProps) => {
       key: "action",
       render: (_: unknown, record: Expense) => (
         <Space size="middle">
-          <a>edit</a>
-          <a onClick={() => handleDelete(record.id!)}>Delete</a>
+          <a onClick={() => handleEditClick(record)}>
+            <EditOutlined />
+          </a>
+          <a onClick={() => handleDelete(record.id!)}>
+            <DeleteOutlined />
+          </a>
         </Space>
       ),
     },
