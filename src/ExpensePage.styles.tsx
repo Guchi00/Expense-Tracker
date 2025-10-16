@@ -25,6 +25,7 @@ export const Header = styled.header`
   background-color: rgb(62, 178, 85);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding-left: 50px;
 `;
 

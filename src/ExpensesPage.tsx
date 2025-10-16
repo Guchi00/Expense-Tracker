@@ -7,6 +7,7 @@ import {
 } from "./components/expenseForm/ExpenseForm";
 
 import * as S from "./ExpensePage.styles";
+import { MonthPicker } from "./components/monthPicker/MonthPicker";
 
 export const ExpensesPage = () => {
   const [expenseData, setExpenseData] = useState<Expense[]>([]);
@@ -131,6 +132,7 @@ export const ExpensesPage = () => {
         <S.Container>
           <S.Header>
             <S.Title>Expense Tracker</S.Title>
+            <MonthPicker />
           </S.Header>
           <S.FormandChartContainer>
             <ExpenseForm onAddExpense={handleAddExpense} />
