@@ -5,7 +5,6 @@ import type { DatePickerProps } from "antd";
 export const ExpenseForm = styled.div`
   height: 480px;
   width: 330px;
-  /* border: solid 1px rgb(232, 232, 232); */
   display: flex;
   align-items: center;
 `;

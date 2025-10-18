@@ -5,12 +5,21 @@ import {
   ExpenseForm,
   type Expense,
 } from "./components/expenseForm/ExpenseForm";
+import { MonthPicker } from "./components/monthPicker/MonthPicker";
+import type { Dayjs } from "dayjs";
 
 import * as S from "./ExpensePage.styles";
-import { MonthPicker } from "./components/monthPicker/MonthPicker";
 
 export const ExpensesPage = () => {
-  const [expenseData, setExpenseData] = useState<Expense[]>([]);
+  const [expenseData, setExpenseData] = useState<Expense[]>(
+    JSON.parse(localStorage.getItem("expenses") || "[]")
+  );
+  const [selectedMonth, setSelectedMonth] = useState<Dayjs | null>(null);
+
+  const handleMonthChange = (date: Dayjs | null) => {
+    setSelectedMonth(date);
+    console.log("Selected month:", date?.format("YYYY-MM"));
+  };
 
   const handleAddExpense = async (newExpense: Expense) => {
     try {
@@ -27,9 +36,7 @@ export const ExpensesPage = () => {
       if (!response.ok) {
         throw new Error("Unable to create expense");
       }
-      const data = await response.json();
-      setExpenseData((prev) => [...prev, data]);
-      console.log("expense successfully created:", data);
+      await getExpenses();
     } catch (error) {
       console.log(`${error}`);
     }
@@ -54,6 +61,10 @@ export const ExpensesPage = () => {
     getExpenses();
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("expense", JSON.stringify(expenseData));
+  }, [expenseData]);
+
   const handleDelete = async (id: string) => {
     try {
       const response = await fetch(
@@ -65,9 +76,8 @@ export const ExpensesPage = () => {
       if (!response.ok) {
         throw new Error("An error occured");
       }
-      const update = expenseData.filter((expense) => expense.id !== id);
-      setExpenseData(update);
-      console.log("expense deleted successfully");
+      await getExpenses();
+      alert("expense deleted successfully");
     } catch (error) {
       console.log(`${error}`);
     }
@@ -88,11 +98,7 @@ export const ExpensesPage = () => {
       if (!response.ok) {
         throw new Error("An error occured");
       }
-      const data = await response.json();
-      const update = expenseData.map((expense) =>
-        expense.id === updatedExpense.id ? data : expense
-      );
-      setExpenseData(update);
+      await getExpenses();
       alert("expense updated successfully");
     } catch (error) {
       console.log(`${error}`);
@@ -132,11 +138,14 @@ export const ExpensesPage = () => {
         <S.Container>
           <S.Header>
             <S.Title>Expense Tracker</S.Title>
-            <MonthPicker />
+            <MonthPicker MonthChange={handleMonthChange} />
           </S.Header>
           <S.FormandChartContainer>
             <ExpenseForm onAddExpense={handleAddExpense} />
-            <ExpenseChart />
+            <ExpenseChart
+              expenseData={expenseData}
+              selectedMonth={selectedMonth}
+            />
           </S.FormandChartContainer>
           <S.ListContainer>
             <ExpenseList
