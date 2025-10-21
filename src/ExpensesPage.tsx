@@ -7,8 +7,10 @@ import {
 } from "./components/expenseForm/ExpenseForm";
 import { MonthPicker } from "./components/monthPicker/MonthPicker";
 import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import * as S from "./ExpensePage.styles";
+import { getExpenseFromAPI, getExpenseFromLocalStorage } from "./utils";
 
 export const ExpensesPage = () => {
   const [expenseData, setExpenseData] = useState<Expense[]>(
@@ -18,6 +20,9 @@ export const ExpensesPage = () => {
 
   const handleMonthChange = (date: Dayjs | null) => {
     setSelectedMonth(date);
+    if (date) {
+      localStorage.setItem("selectedMonth", date.toISOString());
+    }
     console.log("Selected month:", date?.format("YYYY-MM"));
   };
 
@@ -36,7 +41,18 @@ export const ExpensesPage = () => {
       if (!response.ok) {
         throw new Error("Unable to create expense");
       }
-      await getExpenses();
+      const existing = getExpenseFromLocalStorage();
+      localStorage.setItem(
+        "expense",
+        JSON.stringify([...existing, newExpense])
+      );
+      const apiExpenses = await getExpenseFromAPI();
+      const localStorageExpense = getExpenseFromLocalStorage();
+      const merged = [...apiExpenses, ...localStorageExpense];
+      merged.sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+      setExpenseData(merged);
     } catch (error) {
       console.log(`${error}`);
     }
@@ -59,6 +75,10 @@ export const ExpensesPage = () => {
 
   useEffect(() => {
     getExpenses();
+    const storedMonth = localStorage.getItem("selectedMonth");
+    if (storedMonth) {
+      setSelectedMonth(dayjs(storedMonth));
+    }
   }, []);
 
   useEffect(() => {
@@ -132,6 +152,7 @@ export const ExpensesPage = () => {
 
     handleUpdate(updatedExpense);
   };
+
   return (
     <>
       <S.Parent>

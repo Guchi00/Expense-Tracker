@@ -26,6 +26,14 @@ export const Header = styled.header`
   align-items: center;
   justify-content: space-between;
   padding-left: 50px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    height: 100px;
+  }
 `;
 
 export const Title = styled.h3`
@@ -35,6 +43,18 @@ export const Title = styled.h3`
 export const FormandChartContainer = styled.div`
   display: flex;
   justify-content: space-around;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
 `;
 
-export const ListContainer = styled.div``;
+export const ListContainer = styled.div`
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+`;

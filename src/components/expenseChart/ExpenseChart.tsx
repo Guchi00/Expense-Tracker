@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import {
   PieChart,
   Pie,
@@ -10,8 +12,7 @@ import {
 import type { Expense } from "../expenseForm/ExpenseForm";
 
 import * as S from "./ExpenseChart.styles";
-import type { Dayjs } from "dayjs";
-import dayjs from "dayjs";
+
 export interface ExpenseChartProps {
   expenseData: Expense[];
   selectedMonth: Dayjs | null;
@@ -33,7 +34,7 @@ const renderCustomLegend = (props: any) => {
       {payload.map((entry: any, index: number) => (
         <li
           key={`item-${index}`}
-          style={{ display: "inline-block", marginRight: 20 }}
+          style={{ display: "inline-block", marginRight: 20, outline: "none" }}
         >
           <span
             style={{
@@ -43,6 +44,7 @@ const renderCustomLegend = (props: any) => {
               borderRadius: "50%",
               backgroundColor: entry.color,
               marginRight: 6,
+              outline: "none",
             }}
           ></span>
           {entry.value}
@@ -55,15 +57,13 @@ const renderCustomLegend = (props: any) => {
 export const ExpenseChart = (props: ExpenseChartProps) => {
   const { expenseData, selectedMonth } = props;
 
-  const filteredExpenses =
-    selectedMonth === null
-      ? expenseData
-      : expenseData.filter((expense) =>
-          dayjs(expense.date).isSame(selectedMonth, "month")
-        );
-
+  const filteredData = expenseData.filter(
+    (exp) =>
+      dayjs(exp.date).month() === selectedMonth?.month() &&
+      dayjs(exp.date).year() === selectedMonth?.year()
+  );
   const data = Object.values(
-    filteredExpenses.reduce<Record<string, { name: string; value: number }>>(
+    filteredData.reduce<Record<string, { name: string; value: number }>>(
       (acc, expense) => {
         const category = expense.category;
         if (!acc[category]) {
@@ -76,7 +76,7 @@ export const ExpenseChart = (props: ExpenseChartProps) => {
     )
   );
 
-  console.table(filteredExpenses);
+  console.table(filteredData);
   console.table(data);
 
   return (

@@ -11,7 +11,7 @@ interface ExpenseDataProps {
 }
 
 export const ExpenseList = (props: ExpenseDataProps) => {
-  const { expenseData, handleDelete, handleUpdate, handleEditClick } = props;
+  const { expenseData, handleDelete, handleEditClick } = props;
 
   const columns = [
     {

@@ -7,6 +7,14 @@ const GlobalStyles = createGlobalStyle`
     box-sizing: border-box;
   }
 
+  canvas {
+    outline: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

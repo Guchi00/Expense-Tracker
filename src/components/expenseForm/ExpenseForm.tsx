@@ -52,6 +52,12 @@ export const ExpenseForm = (props: ExpenseFormProps) => {
     setInputData(initialState);
   };
 
+  // const handleKeyboardEnter = (
+  //   event: React.KeyboardEvent<HTMLInputElement>
+  // ) => {
+  //   if (event.key === "Enter") handleSubmit();
+  // };
+
   return (
     <S.ExpenseForm>
       <S.Form onSubmit={handleSubmit}>
