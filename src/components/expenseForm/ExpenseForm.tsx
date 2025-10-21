@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { DatePickerProps } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 import * as S from "./ExpenseForm.styles";
 
@@ -38,8 +38,11 @@ export const ExpenseForm = (props: ExpenseFormProps) => {
     });
   };
 
-  const handleDateChange: DatePickerProps["onChange"] = (date, dateString) => {
-    setInputData((prev) => ({ ...prev, date: dateString }));
+  const handleDateChange: DatePickerProps["onChange"] = (_, dateString) => {
+    setInputData((prev) => ({
+      ...prev,
+      date: Array.isArray(dateString) ? dateString[0] : dateString,
+    }));
   };
 
   const handleSubmit = async (event: FormEvent) => {
