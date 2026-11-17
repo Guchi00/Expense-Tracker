@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const Chart = styled.div`
-  height: 450px;
-  width: 330px;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 420px;
 `;

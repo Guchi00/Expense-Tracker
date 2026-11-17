@@ -3,14 +3,15 @@ import { Select, DatePicker, Input } from "antd";
 import type { DatePickerProps } from "antd";
 
 export const ExpenseForm = styled.div`
-  height: 480px;
-  width: 330px;
-  display: flex;
-  align-items: center;
+  width: 100%;
+  min-width: 0;
 `;
 
 export const Form = styled.form`
-  height: 430px;
+  height: auto;
+  min-height: 430px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   width: 100%;
   border: solid 1px rgb(232, 232, 232);
   border-radius: 10px;
@@ -31,7 +32,7 @@ export const Form = styled.form`
       height: 40px;
       width: 100%;
       margin-top: 2px;
-      background-color: rgb(48, 136, 255);
+      background-color: #8068f7;
       border-radius: 8px;
       color: white;
       font-size: 16px;

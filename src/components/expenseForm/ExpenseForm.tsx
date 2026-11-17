@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { DatePickerProps } from "antd";
 import dayjs from "dayjs";
-
+import { App } from "antd";
 import * as S from "./ExpenseForm.styles";
 
 const { Option } = S.StyledSelect;
@@ -23,10 +23,11 @@ const initialState: Expense = {
 };
 
 interface ExpenseFormProps {
-  onAddExpense: (expense: Expense) => void;
+  onAddExpense: (expense: Expense) => Promise<boolean>;
 }
 
 export const ExpenseForm = (props: ExpenseFormProps) => {
+  const { message } = App.useApp();
   const { onAddExpense } = props;
   const [inputData, setInputData] = useState<Expense>(initialState);
 
@@ -47,19 +48,24 @@ export const ExpenseForm = (props: ExpenseFormProps) => {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (Object.values(inputData).some((value) => value === "" || value === 0)) {
-      alert("All fields must be filled");
+
+    if (
+      !inputData.title.trim() ||
+      !inputData.category ||
+      !inputData.date ||
+      !Number.isFinite(inputData.amount) ||
+      inputData.amount <= 0
+    ) {
+      message.warning("Please complete all fields correctly.");
       return;
     }
-    onAddExpense(inputData);
-    setInputData(initialState);
-  };
 
-  // const handleKeyboardEnter = (
-  //   event: React.KeyboardEvent<HTMLInputElement>
-  // ) => {
-  //   if (event.key === "Enter") handleSubmit();
-  // };
+    const success = await onAddExpense(inputData);
+
+    if (success) {
+      setInputData(initialState);
+    }
+  };
 
   return (
     <S.ExpenseForm>

@@ -10,7 +10,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import type { Expense } from "../expenseForm/ExpenseForm";
-
 import * as S from "./ExpenseChart.styles";
 
 export interface ExpenseChartProps {
@@ -18,7 +17,7 @@ export interface ExpenseChartProps {
   selectedMonth: Dayjs | null;
 }
 
-const COLORS = ["#3088ff", "#3eb255", "#fa8f37"];
+const COLORS = ["#8068f7", "#b7a8ff", "#e0d9ff"];
 
 const renderCustomLegend = (props: any) => {
   const { payload } = props;
@@ -57,11 +56,15 @@ const renderCustomLegend = (props: any) => {
 export const ExpenseChart = (props: ExpenseChartProps) => {
   const { expenseData, selectedMonth } = props;
 
-  const filteredData = expenseData.filter(
-    (exp) =>
-      dayjs(exp.date).month() === selectedMonth?.month() &&
-      dayjs(exp.date).year() === selectedMonth?.year()
-  );
+  const filteredData = expenseData.filter((expense) => {
+    const month = selectedMonth ?? dayjs();
+
+    return (
+      dayjs(expense.date).month() === month.month() &&
+      dayjs(expense.date).year() === month.year()
+    );
+  });
+
   const data = Object.values(
     filteredData.reduce<Record<string, { name: string; value: number }>>(
       (acc, expense) => {
@@ -72,12 +75,9 @@ export const ExpenseChart = (props: ExpenseChartProps) => {
         acc[category].value += Number(expense.amount);
         return acc;
       },
-      {}
-    )
+      {},
+    ),
   );
-
-  console.table(filteredData);
-  console.table(data);
 
   return (
     <S.Chart>
